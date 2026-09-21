@@ -1,12 +1,14 @@
 # fundaily
 
-占位仓库，尚无实际功能代码。发布这个空壳版本只是为了在 PyPI 上保留 `fundaily` 这个包名，避免被无关项目抢注；具体功能会在之后陆续补充。
+占位仓库，尚无实际功能代码。当前已在 PyPI 发布 `0.0.1` 空壳版本，用于保留 `fundaily` 这个包名；具体功能会在之后陆续补充。
 
 ## Install
 
 ```bash
 pip install fundaily
 ```
+
+PyPI：<https://pypi.org/project/fundaily/>
 
 ## 最小示例
 

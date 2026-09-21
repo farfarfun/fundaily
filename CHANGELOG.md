@@ -6,7 +6,7 @@
 
 ### 新增
 
-- 初始占位发布，仅用于在 PyPI 上保留 `fundaily` 包名，尚无实际功能代码。
+- 初始占位发布（[PyPI 0.0.1](https://pypi.org/project/fundaily/0.0.1/)），仅用于保留 `fundaily` 包名，尚无实际功能代码。
 
 ### 修复
 
