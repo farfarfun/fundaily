@@ -1,14 +1,49 @@
-"""fundaily 目前是占位包，测试仅覆盖包可正常导入及版本号存在。"""
+"""fundaily 占位包的最小行为测试。
+
+重点是拦截版本号漂移：`pyproject.toml` 的 `[project].version` 是唯一来源，
+`fundaily.__version__` 必须与之一致，因此测试里不写死任何版本字面量。
+"""
+
+import re
+import unittest
+from pathlib import Path
 
 import fundaily
 
-
-def test_import():
-    """包应可正常导入。"""
-    assert fundaily is not None
+PYPROJECT = Path(__file__).resolve().parent.parent / "pyproject.toml"
 
 
-def test_version():
-    """`__version__` 必须存在且为非空字符串。"""
-    assert isinstance(fundaily.__version__, str)
-    assert fundaily.__version__
+def _version_from_pyproject() -> str:
+    """从 pyproject.toml 的 [project] 段里取出 version（兼容 3.10，不依赖 tomllib）。"""
+    text = PYPROJECT.read_text(encoding="utf-8")
+    match = re.search(r'^version\s*=\s*"([^"]+)"', text, flags=re.MULTILINE)
+    assert match is not None, "pyproject.toml 里找不到 version"
+    return match.group(1)
+
+
+class PackageTests(unittest.TestCase):
+    def test_import(self) -> None:
+        """包应可正常导入。"""
+        self.assertIsNotNone(fundaily)
+
+    def test_version_is_non_empty_string(self) -> None:
+        """`__version__` 必须存在且为非空字符串。"""
+        self.assertIsInstance(fundaily.__version__, str)
+        self.assertTrue(fundaily.__version__)
+
+    def test_version_is_resolved_from_metadata(self) -> None:
+        """包已安装（含 editable）时必须拿到真实版本，而不是回退占位值。"""
+        self.assertNotEqual(fundaily.__version__, "0.0.0+unknown")
+
+    def test_version_matches_pyproject(self) -> None:
+        """源码暴露的版本必须与打包声明一致。"""
+        self.assertTrue(PYPROJECT.is_file(), f"缺少 {PYPROJECT}")
+        self.assertEqual(fundaily.__version__, _version_from_pyproject())
+
+    def test_only_exposes_version(self) -> None:
+        """占位阶段只对外暴露 `__version__`。"""
+        self.assertEqual(fundaily.__all__, ["__version__"])
+
+
+if __name__ == "__main__":
+    unittest.main()
