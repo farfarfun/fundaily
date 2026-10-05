@@ -1,6 +1,6 @@
 [project]
 name = "fundaily"
-version = "0.0.1"
+version = "0.0.2"
 description = "占位包：保留 fundaily 包名，暂无功能代码，仅暴露 __version__"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -23,6 +23,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fundaily"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/uv.lock"]
 
 [tool.ruff]
 line-length = 120
